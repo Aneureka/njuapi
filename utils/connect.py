@@ -5,6 +5,9 @@
 """
 
 import requests
+import gzip
+import re
+
 from njuapi.utils.middlewares import get_header
 
 
@@ -21,6 +24,10 @@ def post_required_cookie(url):
 	s = get_session()
 	s.get(url)
 	return s.post(url, data)
+
+def get_content(url):
+	r = get(url)
+	return r.text
 
 def get_session():
 	s = requests.Session()
