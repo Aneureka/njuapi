@@ -5,40 +5,45 @@
 """
 
 import requests
-import gzip
-import re
 
-from njuapi.utils.middlewares import get_header
+from utils.middlewares import get_header
 
 
 def get(url):
 	s = get_session()
 	return s.get(url)
 
+
 def post(url, data):
 	s = get_session()
 	s.get(url)
 	return s.post(url, data)
+
 
 def post_required_cookie(url):
 	s = get_session()
 	s.get(url)
 	return s.post(url, data)
 
+
 def get_content(url):
 	r = get(url)
 	return r.text
+
 
 def get_session():
 	s = requests.Session()
 	return wrapped(s)
 
+
 def get_with_cookie(url, cookies):
 	s = get_session()
 	return s.get(url=url, cookies=cookies)
 
+
 def get_cookie(response):
 	return response.cookies.get_dict()
+
 
 def wrapped(s):
 	headers = dict()
@@ -46,6 +51,7 @@ def wrapped(s):
 	headers['Content-Type'] = 'text/javascript; charset=utf-8'
 	s.headers = headers
 	return s
+
 
 def build_url(host, **args):
 	url = host

@@ -5,7 +5,7 @@
 """
 
 from random import choice
-from njuapi.settings import USER_AGENT_CHOICES, DEFAULT_USER_AGENT, rotate_user_agent
+from config import USER_AGENT_CHOICES, DEFAULT_USER_AGENT, rotate_user_agent
 
 
 def get_header():
