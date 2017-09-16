@@ -23,8 +23,10 @@ def initTable():
             table.append(1)
 
 def loadVcode(path):
-    data = get_jw_content(ValidateURL)
+    se = requests.Session()
+    data = get_byte_content_advanced(se, ValidateURL)
     open(path, 'wb').write(data)
+    return se
 
 def twrify(name, save):
     im = Image.open(name)
@@ -38,7 +40,7 @@ def twrify(name, save):
     out.save(save)
 
 def getVcode(language):
-    loadVcode(PATH)
+    se=loadVcode(PATH)
     twrify(PATH, PATH2)
     s=pytesser3.image_file_to_string(PATH2, language=language)
     num=4
@@ -51,7 +53,7 @@ def getVcode(language):
         else:
             result+=c
             num-=1
-    return result
+    return [se, result]
 
 def deleteVcode():
     if os.path.exists(PATH):
@@ -61,13 +63,13 @@ def deleteVcode():
 
 def login(name, password, language):
     try:
-        vcode=getVcode(language)
+        se, vcode=getVcode(language)
         postData = {'userName': name,
                     'password': password,
                     'returnUrl': 'null',
                     'ValidateCode': vcode
                     }
-        po=post_jw_content(LoginURL, postData)
+        po=post_byte_content_advanced(se, LoginURL, postData)
         upo=po.decode('utf-8')
         erlist = re.compile('验证码错误')
         ernum = re.findall(erlist, upo)
@@ -79,12 +81,13 @@ def login(name, password, language):
             retrycount+=1
             totalcount+=1
             deleteVcode()
-            login(name, password, language)
+            return login(name, password, language)
         else:
             global retrycount
-            print('登陆成功。重试'+str(retrycount)+"次。\ncookie:")
+            print('登陆成功。重试'+str(retrycount)+"次。")
             retrycount = 0
-            deleteVcode()
+            #deleteVcode()
+            return se
     except:
         #一般是你断网了，或者访问太频繁被教务网封了
         print("未知错误")
@@ -93,8 +96,8 @@ def login(name, password, language):
         retrycount += 1
         totalcount += 1
         deleteVcode()
-        login(name, password, language)
+        return login(name, password, language)
 
 def Login():
     initTable()
-    login(NAME, PASSWORD, language='fontyp')
+    return login(NAME, PASSWORD, language='fontyp')
