@@ -85,9 +85,6 @@ def login(name, password, language):
             print('登陆成功。重试'+str(retrycount)+"次。\ncookie:")
             retrycount = 0
             deleteVcode()
-############# session已经有cookie了，失效前可以随便访问#############
-            print(get_session().cookies)
-############# session已经有cookie了，失效前可以随便访问#############
     except:
         #一般是你断网了，或者访问太频繁被教务网封了
         print("未知错误")

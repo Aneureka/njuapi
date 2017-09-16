@@ -24,9 +24,18 @@ def post_required_cookie(url):
 	return s.post(url, data)
 
 
+def get_advanced(s, url):
+	return s.get(url)
+
+
+def post_advanced(s, url, data):
+	return s.post(url, data)
+
+
 def post_content(url, data):
 	r = post(url, data)
 	return r.text
+
 
 def get_content(url):
 	r = get(url)
@@ -70,16 +79,3 @@ def build_url(host, **args):
 		arg_list.append(str(key) + '=' + str(value))
 	url += "&".join(arg_list)
 	return url
-
-
-if __name__ == '__main__':
-	url = build_url("https://github.com/login")
-	data = {
-		'commit': 'Sign in',
-		'utf8': '✓',
-		'authenticity_token': 'i6PXXJhRVuCwUSMlHFDLUhLkPGJeQkulK2K7ZvC+NlkcQWmyJFQhypZw7jUZQ0JYBH/MMFTtR7MyItxgcD9Twg==',
-		'login': 'Aneureka',
-		'password': 'guohaobin555'
-	}
-	rp = post(url, data)
-	print(get_cookie(rp))

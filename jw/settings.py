@@ -13,3 +13,5 @@ PASSWORD='Hyj123456'
 ValidateURL="http://elite.nju.edu.cn/jiaowu/ValidateCode.jsp"
 
 LoginURL="http://elite.nju.edu.cn/jiaowu/login.do"
+
+LessonURL="http://elite.nju.edu.cn/jiaowu/student/teachinginfo/courseList.do?method=currentTermCourse"
