@@ -20,15 +20,24 @@ def post(url, data):
 	return s.post(url, data)
 
 
-def post_required_cookie(url):
+def post_required_cookie(url, data):
 	s = get_session()
 	s.get(url)
+	return s.post(url, data)
+
+
+def get_advanced(s, url):
+	return s.get(url)
+
+
+def post_advanced(s, url, data):
 	return s.post(url, data)
 
 
 def post_content(url, data):
 	r = post(url, data)
 	return r.text
+
 
 def get_content(url):
 	r = get(url)
