@@ -34,6 +34,14 @@ def get_content(url):
 	r = get(url)
 	return r.text
 
+def get_jw_content(url):
+	r = get(url)
+	return r.content
+
+def post_jw_content(url, data):
+	r = post(url, data)
+	return r.content
+
 
 def get_session():
 	s = requests.Session()
