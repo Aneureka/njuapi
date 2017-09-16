@@ -66,16 +66,3 @@ def build_url(host, **args):
 		arg_list.append(str(key) + '=' + str(value))
 	url += "&".join(arg_list)
 	return url
-
-
-if __name__ == '__main__':
-	url = build_url("https://github.com/login")
-	data = {
-		'commit': 'Sign in',
-		'utf8': '✓',
-		'authenticity_token': 'i6PXXJhRVuCwUSMlHFDLUhLkPGJeQkulK2K7ZvC+NlkcQWmyJFQhypZw7jUZQ0JYBH/MMFTtR7MyItxgcD9Twg==',
-		'login': 'Aneureka',
-		'password': 'guohaobin555'
-	}
-	rp = post(url, data)
-	print(get_cookie(rp))
