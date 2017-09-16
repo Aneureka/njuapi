@@ -26,6 +26,10 @@ def post_required_cookie(url):
 	return s.post(url, data)
 
 
+def post_content(url, data):
+	r = post(url, data)
+	return r.text
+
 def get_content(url):
 	r = get(url)
 	return r.text

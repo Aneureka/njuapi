@@ -1,8 +1,13 @@
 HOST = 'http://bbs.nju.edu.cn/'
 TABS = HOST + 'cache_bbsleft.htm'
 TOP10 = HOST + 'bbstop10'
-BBSALL = HOST + 'bbsall'
+BBS_ALL = HOST + 'bbsall'
+BBS_TOP_B2O = HOST + 'bbstopb10'
+BBS_TOP_ALL = HOST + 'bbstopall'
+SEARCH_ARTICLE = HOST + 'bbsfind'
 
+
+CODE = 'gb2312'
 
 PARSE_RULE = {
 	'tabs': ''
