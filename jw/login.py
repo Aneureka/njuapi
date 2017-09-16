@@ -7,8 +7,6 @@ import pytesser3
 from utils.connect import *
 from jw.settings import *
 
-s = requests.Session()
-
 retrycount=0
 
 totalcount=0
@@ -69,7 +67,7 @@ def login(name, password, language):
                     'returnUrl': 'null',
                     'ValidateCode': vcode
                     }
-        po=s.post(LoginURL,data=postData).content
+        po=post_jw_content(LoginURL, postData)
         upo=po.decode('utf-8')
         erlist = re.compile('验证码错误')
         ernum = re.findall(erlist, upo)
@@ -88,7 +86,7 @@ def login(name, password, language):
             retrycount = 0
             deleteVcode()
 ############# session已经有cookie了，失效前可以随便访问#############
-            print(s.cookies)
+            print(get_session().cookies)
 ############# session已经有cookie了，失效前可以随便访问#############
     except:
         #一般是你断网了，或者访问太频繁被教务网封了

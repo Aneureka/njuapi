@@ -8,20 +8,18 @@ import requests
 
 from utils.middlewares import get_header
 
+s = requests.Session()
 
 def get(url):
-	s = get_session()
 	return s.get(url)
 
 
 def post(url, data):
-	s = get_session()
 	s.get(url)
 	return s.post(url, data)
 
 
 def post_required_cookie(url):
-	s = get_session()
 	s.get(url)
 	return s.post(url, data)
 
@@ -44,12 +42,10 @@ def post_jw_content(url, data):
 
 
 def get_session():
-	s = requests.Session()
 	return wrapped(s)
 
 
 def get_with_cookie(url, cookies):
-	s = get_session()
 	return s.get(url=url, cookies=cookies)
 
 
