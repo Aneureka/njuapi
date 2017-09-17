@@ -67,5 +67,39 @@ def getLessons():
                 tmp=[]
     return washlesson
 
+#获取课程信息
+#CourseNumber和Classid上一步给出
+def getCourse(CourseNumber, Classid):
+    se = Login()
+    AddCourseURL=CourseURL+str(CourseNumber)+"&classid="+str(Classid)
+    data = get_byte_content_advanced(se, AddCourseURL)
+    course = data.decode('UTF-8')
+    courselist = re.compile('font-weight:bold;padding-bottom:5px">(.*?)：</div>\r\n(.*?)</br></br>', re.S)
+    coursenum = re.findall(courselist, course)
+    washcourse=coursedict
+    washcalendar=[]
+    tmp = []
+    for i in range(len(coursenum)):
+        courses=list(coursenum[i])
+        courses[1]=courses[1].replace("<br/>","|")
+        courses[1] = re.sub('\|*$', "", courses[1])
+        courses[1] = courses[1].replace("\t", "")
+        courses[1] = courses[1].replace("\r", "")
+        washcourse[courseutildict[courses[0]]]=courses[1]
+    #周历
+    calendarlist=re.compile('padding-right:8px">(.*?)</td>', re.S)
+    calendarnum = re.findall(calendarlist, course)[1:]
+    for i in range(len(calendarnum)):
+        calendars=calendarnum[i]
+        calendars = calendars.replace("\n", "")
+        calendars = calendars.replace("\r", "")
+        tmp.append(calendars)
+        if i%5==4:
+            tmpdict = dict(zip(calendarkey, tmp))
+            washcalendar.append(tmpdict)
+            tmp=[]
+    washcourse['TeachingCalendar']=washcalendar
+    return washcourse
+
 if __name__=="__main__":
-    print(getScore(2016, 2))
+    print(getCourse('25010500', '77486'))
