@@ -3,6 +3,7 @@ from jw.settings import *
 from utils.connect import *
 import re
 
+#获取本学期课程信息
 def getLessons():
     se=Login()
     data = get_byte_content_advanced(se, LessonURL)
@@ -18,12 +19,14 @@ def getLessons():
                 st=lessons.find("classid")+8
                 en=lessons.find("target")-2
                 lessons=lessons[st:en]
-            lessons=lessons.replace("\r\n\t\t\t\t\t  \t","")
-            lessons = lessons.replace("\r\n\t\t\t\t\t  ", "")
-            lessons = lessons.replace("<br/>", "|")
+            if i % 10 == 6:
+                lessons=lessons.replace("\r\n\t\t\t\t\t  \t","")
+                lessons = lessons.replace("\r\n\t\t\t\t\t  ", "")
+                lessons = lessons.replace("<br/>", "|")
             tmp.append(lessons)
             if i%10==6:
-                washlesson.append(tmp)
+                tmpdict=dict(zip(lessonkey, tmp))
+                washlesson.append(tmpdict)
                 tmp=[]
     return washlesson
 

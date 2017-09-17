@@ -77,7 +77,6 @@ def login(name, password, language):
             global retrycount
             global totalcount
             retrycount+=1
-            totalcount+=1
             deleteVcode()
             return login(name, password, language)
         else:
@@ -92,7 +91,6 @@ def login(name, password, language):
         global retrycount
         global totalcount
         retrycount += 1
-        totalcount += 1
         deleteVcode()
         return login(name, password, language)
 
