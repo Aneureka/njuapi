@@ -16,4 +16,8 @@ LoginURL="http://elite.nju.edu.cn/jiaowu/login.do"
 
 LessonURL="http://elite.nju.edu.cn/jiaowu/student/teachinginfo/courseList.do?method=currentTermCourse"
 
+ScoreURL="http://elite.nju.edu.cn/jiaowu/student/studentinfo/achievementinfo.do?method=searchTermList&termCode="
+
 lessonkey=['Classid', 'CourseNumber', 'CourseName', 'District', 'Teacher', 'TimeandPlace']
+
+scorekey=['Classid', 'CourseNumber', 'CourseName', 'EnCourseName', 'CourseType', 'Credit', 'Score']
