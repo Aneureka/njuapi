@@ -7,7 +7,7 @@
 import re
 import time
 
-from utils.connect import get_content, post_content
+from utils.connect import get_content, post_content, build_url
 from utils.parse import get_bs_object
 from bbs.settings import *
 
@@ -67,14 +67,14 @@ def search_article(user='', title='', title2='', title_without='', from_now_begi
 
 
 def get_bbs_not(board):
-	res = get_content(HOST + 'bbsnot?board=' + board)
+	res = get_content(build_url(BBS_NOT, board=board))
 	soup = get_bs_object(res)
 	# TODO: 编码问题
 	return soup.find('textarea').text
 
 
 def get_article_list_by_board(board, page=1, type=0):
-	res = get_content(HOST + 'bbsdoc?board=' + board)
+	res = get_content(build_url(BBS_DOC, board=board))
 	if type == 1:
 		pattern = re.compile(r'<tr><td>\d+<td><td><a href=bbsqry\?userid=[^>]+>([^<]+)</a><td>([^<]+)<td><a href=([^>]+)>○\s*([^<]+)</a><td><font color=\w*>(\d+)</font>[^>]+>(\d+)')
 		article_list = [dict(writer=a, time=b, postfix=c, title=d.strip(), reply=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)]
@@ -107,5 +107,5 @@ def get_article(postfix):
 
 
 if __name__ == '__main__':
-	print(get_bbs_board_top20())
+	print(get_bbs_not('AI'))
 
