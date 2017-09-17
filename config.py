@@ -12,3 +12,5 @@ USER_AGENT_CHOICES = [
 DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'
 
 rotate_user_agent = True
+
+connect_error_prompt = {'error_code': 1, 'prompt': '操作太快了0.0，人家受不了啦'}
