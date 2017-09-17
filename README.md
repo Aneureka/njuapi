@@ -19,3 +19,10 @@
 | /bbs/get_article_list_by_board |   获取板块内文章列表    | GET  |           board（板块名称）、page（页数）           |
 |      /bbs/search_article       |   搜索文章（未测试）    | POST | user（作者名称含有）、title（标题含有）、title2（标题含有2）、title_without（标题不含）、from_now_begin（距离现在a天）、from_now_end（到距离现在b天，a<=b） |
 
+
+### 教务平台
+|               接口               |       说明       |  类型  |                   请求参数                   |
+| :----------------------------: | :------------: | :--: | :--------------------------------------: |
+|           /jw/getScore         |     获取各个学期成绩     | POST  |           name（学号）、password（密码）、year（年份）、term（学期）              |
+|           /jw/getLessons       |   获取本学期课程信息   | POST  |             name（学号）、password（密码）               |
+|           /jw/getCourse        |   获取单门课程详细信息    | POST  |             name（学号）、password（密码）、CourseNumber、Classid               |

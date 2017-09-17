@@ -9,8 +9,6 @@ from jw.settings import *
 
 retrycount=0
 
-totalcount=0
-
 #二值化用
 threshold = 140
 table = []
@@ -79,14 +77,13 @@ def login(name, password, language):
             global retrycount
             global totalcount
             retrycount+=1
-            totalcount+=1
             deleteVcode()
             return login(name, password, language)
         else:
             global retrycount
             print('登陆成功。重试'+str(retrycount)+"次。")
             retrycount = 0
-            #deleteVcode()
+            deleteVcode()
             return se
     except:
         #一般是你断网了，或者访问太频繁被教务网封了
@@ -94,10 +91,9 @@ def login(name, password, language):
         global retrycount
         global totalcount
         retrycount += 1
-        totalcount += 1
         deleteVcode()
         return login(name, password, language)
 
-def Login():
+def Login(name, password):
     initTable()
-    return login(NAME, PASSWORD, language='fontyp')
+    return login(name, password, language='fontyp')
