@@ -5,10 +5,11 @@ import re
 from requests.exceptions import ConnectionError
 from config import connect_error_prompt
 
-#获取各个学期成绩
-#year=年份
-#term=学期，填1或2
+# 获取各个学期成绩
+# year=年份
+# term=学期，填1或2
 def getScore(name, password, year, term):
+    print('aaaaa')
     se=Login(name, password)
     AddScoreURL=ScoreURL+str(year)+str(term)
     try:

@@ -7,6 +7,7 @@
 from flask import Flask, request, jsonify
 
 from bbs.api import *
+from jw.api import *
 
 app = Flask(__name__)
 
@@ -79,11 +80,67 @@ def bbs_get_article_list_by_board():
 
 
 # 小百合：搜索文章
-@app.route('/bbs/search_article')
+@app.route('/bbs/search_article', methods=['GET', 'POST'])
 def bbs_search_article():
 	if request.method == 'POST':
 		try:
-			return jsonify(search_article(**request.get_data()))
+			data = request.args.to_dict()
+			user = data.get('user')
+			title = data.get('title')
+			title2 = data.get('title2')
+			title_without = data.get('title_without')
+			from_now_begin = data.get('from_now_begin')
+			from_now_end = data.get('from_now_end')
+			return jsonify(search_article(user, title, title2, title_without, from_now_begin, from_now_end))
+		except:
+			return 'param wrong or not given!'
+	else:
+		return 'HTTP Method Not POST.'
+
+
+# 教务平台：获取各个学期成绩
+@app.route('/jw/get_score', methods=['GET', 'POST'])
+def jw_get_score():
+	if request.method == 'POST':
+		try:
+			data = request.args.to_dict()
+			username = data.get('name')
+			password = data.get('password')
+			year = int(data.get('year'))
+			term = int(data.get('term'))
+			return jsonify(getScore(username, password, year, term))
+		except:
+			return 'param wrong or not given!'
+	else:
+		return 'HTTP Method Not POST.'
+
+
+# 教务平台：获取本学期课程信息
+@app.route('/jw/get_lessons', methods=['GET', 'POST'])
+def jw_get_lessons():
+	if request.method == 'POST':
+		try:
+			data = request.args.to_dict()
+			username = data.get('name')
+			password = data.get('password')
+			return jsonify(getLessons(username, password))
+		except:
+			return 'param wrong or not given!'
+	else:
+		return 'HTTP Method Not POST.'
+
+
+# 教务平台：获取单门课程详细信息
+@app.route('/jw/get_course', methods=['GET', 'POST'])
+def jw_get_lessons():
+	if request.method == 'POST':
+		try:
+			data = request.args.to_dict()
+			username = data.get('name')
+			password = data.get('password')
+			course_number = data.get('course_number')
+			classid = data.get('classid')
+			return jsonify(getCourse(username, password, course_number, classid))
 		except:
 			return 'param wrong or not given!'
 	else:

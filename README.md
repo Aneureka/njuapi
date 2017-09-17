@@ -23,6 +23,6 @@
 ### 教务平台
 |               接口               |       说明       |  类型  |                   请求参数                   |
 | :----------------------------: | :------------: | :--: | :--------------------------------------: |
-|           /jw/getScore         |     获取各个学期成绩     | POST  |           name（学号）、password（密码）、year（年份）、term（学期）              |
-|           /jw/getLessons       |   获取本学期课程信息   | POST  |             name（学号）、password（密码）               |
-|           /jw/getCourse        |   获取单门课程详细信息    | POST  |             name（学号）、password（密码）、CourseNumber、Classid               |
+|           /jw/get_score         |     获取各个学期成绩     | POST  |           name（学号）、password（密码）、year（年份）、term（学期）              |
+|           /jw/get_lessons       |   获取本学期课程信息   | POST  |             name（学号）、password（密码）               |
+|           /jw/get_course        |   获取单门课程详细信息    | POST  |             name（学号）、password（密码）、course_number、classid               |

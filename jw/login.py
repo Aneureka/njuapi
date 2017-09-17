@@ -71,16 +71,15 @@ def login(name, password, language):
         upo=po.decode('utf-8')
         erlist = re.compile('验证码错误')
         ernum = re.findall(erlist, upo)
+        global retrycount
+        global totalcount
         if len(ernum)!=0:
             #验证码识别出错
             print('验证码错误。将重试。')
-            global retrycount
-            global totalcount
             retrycount+=1
             deleteVcode()
             return login(name, password, language)
         else:
-            global retrycount
             print('登陆成功。重试'+str(retrycount)+"次。")
             retrycount = 0
             deleteVcode()
@@ -88,8 +87,6 @@ def login(name, password, language):
     except:
         #一般是你断网了，或者访问太频繁被教务网封了
         print("未知错误")
-        global retrycount
-        global totalcount
         retrycount += 1
         deleteVcode()
         return login(name, password, language)
