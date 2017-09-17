@@ -9,8 +9,6 @@ from jw.settings import *
 
 retrycount=0
 
-totalcount=0
-
 #二值化用
 threshold = 140
 table = []
@@ -86,7 +84,7 @@ def login(name, password, language):
             global retrycount
             print('登陆成功。重试'+str(retrycount)+"次。")
             retrycount = 0
-            #deleteVcode()
+            deleteVcode()
             return se
     except:
         #一般是你断网了，或者访问太频繁被教务网封了
