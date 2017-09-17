@@ -33,7 +33,7 @@ def get_top10():
 	except ConnectionError:
 		return connect_error_prompt
 	pattern = re.compile(r'<a href=bbsdoc\?board=\w+>(\w+)</a><td><a href="(\S+)">\s*([^<]+)\s*</a><td><a href=\S+>\s*(\w+)</a><td>(\d+)')
-	top10 = [dict(board=a, postfix=b, title=c.strip(), writer=d, follower=e) for a, b, c, d, e in pattern.findall(res)]
+	top10 = [dict(board=a, postfix=b, title=c.strip(), author=d, follower=e) for a, b, c, d, e in pattern.findall(res)]
 	return top10
 
 
@@ -82,7 +82,7 @@ def search_article(user='', title='', title2='', title_without='', from_now_begi
 	except ConnectionError:
 		return connect_error_prompt
 	pattern = re.compile(r'<a href=bbsqry\?userid=\w+>(\w+)</a><td width=\d+>([^<]+)<td><a href=([^>]+)>([^<]+)</a>')
-	bbs_find = [dict(writer=a, date=b, postfix=c, title=d.strip()) for a, b, c, d in pattern.findall(res)]
+	bbs_find = [dict(author=a, date=b, postfix=c, title=d.strip()) for a, b, c, d in pattern.findall(res)]
 	return bbs_find
 
 
@@ -103,10 +103,10 @@ def get_article_list_by_board(board, page=1, type=0):
 		return connect_error_prompt
 	if type == 1:
 		pattern = re.compile(r'<tr><td>\d+<td><td><a href=bbsqry\?userid=[^>]+>([^<]+)</a><td>([^<]+)<td><a href=([^>]+)>○\s*([^<]+)</a><td><font color=\w*>(\d+)</font>[^>]+>(\d+)')
-		article_list = [dict(writer=a, time=b, postfix=c, title=d.strip(), reply=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)]
+		article_list = [dict(author=a, time=b, postfix=c, title=d.strip(), reply=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)]
 	else:
 		pattern = re.compile(r'<td><a href=bbsqry\?userid=[^>]+>([^<]+)</a><td><td><nobr>([^<]+)<td><a href=([^>]+)>○\s*([^<]+)</a>\(<[^>]+>([\w\.]+)</font>\)<td><font color=\w*>(\d+)</font>')
-		article_list = [dict(writer=a, time=b, postfix=c, title=d.strip(), size=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)]
+		article_list = [dict(author=a, time=b, postfix=c, title=d.strip(), size=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)]
 
 	while page > 1:
 		next_urls = re.compile(r'<a href=([^>]+)>上一页</a>').findall(res)
@@ -114,9 +114,9 @@ def get_article_list_by_board(board, page=1, type=0):
 			next_url = next_urls[0]
 			res = get_content(HOST + next_url)
 			if type == 1:
-				article_list.extend([dict(writer=a, time=b, postfix=c, title=d.strip(), reply=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)])
+				article_list.extend([dict(author=a, time=b, postfix=c, title=d.strip(), reply=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)])
 			else:
-				article_list.extend([dict(writer=a, time=b, postfix=c, title=d.strip(), size=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)])
+				article_list.extend([dict(author=a, time=b, postfix=c, title=d.strip(), size=e, hot=f) for a, b, c, d, e, f in pattern.findall(res)])
 			page -= 1
 			time.sleep(0.4)
 		else:
