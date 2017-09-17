@@ -80,11 +80,11 @@ def getLessons(name, password):
 #CourseNumber和Classid上一步给出
 def getCourse(name, password, CourseNumber, Classid):
     se = Login(name, password)
+    AddCourseURL = CourseURL + str(CourseNumber) + "&classid=" + str(Classid)
     try:
-        AddCourseURL=CourseURL+str(CourseNumber)+"&classid="+str(Classid)
+        data = get_byte_content_advanced(se, AddCourseURL)
     except ConnectionError:
         return connect_error_prompt
-    data = get_byte_content_advanced(se, AddCourseURL)
     course = data.decode('UTF-8')
     courselist = re.compile('font-weight:bold;padding-bottom:5px">(.*?)：</div>\r\n(.*?)</br></br>', re.S)
     coursenum = re.findall(courselist, course)
