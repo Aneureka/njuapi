@@ -94,6 +94,6 @@ def login(name, password, language):
         deleteVcode()
         return login(name, password, language)
 
-def Login():
+def Login(name, password):
     initTable()
-    return login(NAME, PASSWORD, language='fontyp')
+    return login(name, password, language='fontyp')

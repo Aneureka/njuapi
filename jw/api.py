@@ -2,14 +2,19 @@ from jw.login import Login
 from jw.settings import *
 from utils.connect import *
 import re
+from requests.exceptions import ConnectionError
+from config import connect_error_prompt
 
 #获取各个学期成绩
 #year=年份
 #term=学期，填1或2
-def getScore(year, term):
-    se=Login()
+def getScore(name, password, year, term):
+    se=Login(name, password)
     AddScoreURL=ScoreURL+str(year)+str(term)
-    data = get_byte_content_advanced(se, AddScoreURL)
+    try:
+        data = get_byte_content_advanced(se, AddScoreURL)
+    except ConnectionError:
+        return connect_error_prompt
     score = data.decode('UTF-8')
     scorelist = re.compile('middle">(.*?)</td>', re.S)
     scorenum = re.findall(scorelist, score)
@@ -41,9 +46,12 @@ def getScore(year, term):
     return washscore
 
 #获取本学期课程信息
-def getLessons():
-    se=Login()
-    data = get_byte_content_advanced(se, LessonURL)
+def getLessons(name, password):
+    se=Login(name, password)
+    try:
+        data = get_byte_content_advanced(se, LessonURL)
+    except ConnectionError:
+        return connect_error_prompt
     lesson=data.decode('UTF-8')
     lessonlist = re.compile('middle">(.*?)</td>', re.S)
     lessonnum = re.findall(lessonlist, lesson)
@@ -67,11 +75,14 @@ def getLessons():
                 tmp=[]
     return washlesson
 
-#获取课程信息
+#获取单门课程详细信息
 #CourseNumber和Classid上一步给出
-def getCourse(CourseNumber, Classid):
-    se = Login()
-    AddCourseURL=CourseURL+str(CourseNumber)+"&classid="+str(Classid)
+def getCourse(name, password, CourseNumber, Classid):
+    se = Login(name, password)
+    try:
+        AddCourseURL=CourseURL+str(CourseNumber)+"&classid="+str(Classid)
+    except ConnectionError:
+        return connect_error_prompt
     data = get_byte_content_advanced(se, AddCourseURL)
     course = data.decode('UTF-8')
     courselist = re.compile('font-weight:bold;padding-bottom:5px">(.*?)：</div>\r\n(.*?)</br></br>', re.S)
@@ -102,4 +113,4 @@ def getCourse(CourseNumber, Classid):
     return washcourse
 
 if __name__=="__main__":
-    print(getCourse('25010500', '77486'))
+    print(getCourse('', '', '25010500', '77486'))
