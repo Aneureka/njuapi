@@ -4,19 +4,28 @@ PATH='F:/1.jpg'
 # 验证码二值化临时路径，也可以自己填
 PATH2='F:/2.jpg'
 
-HOST = "http://elite.nju.edu.cn/"
+# DEBUG开关
+DEBUG=True
 
-JW_HOST = HOST + "jiaowu/"
+login_error_prompt_null_nameorpasswd = {'error_code': 1, 'prompt': '用户名或密码为空'}
+
+login_error_prompt_wrong_nameorpasswd = {'error_code': 1, 'prompt': '用户名或密码错误'}
+
+login_error_prompt_wrong_timeout = {'error_code': 1, 'prompt': '重试次数过多'}
+
+MAX_RETRY_COUNT=15
+
+HOST = "http://elite.nju.edu.cn/jiaowu/"
 
 ValidateURL = HOST + "ValidateCode.jsp"
 
-LoginURL = JW_HOST + "login.do"
+LoginURL = HOST + "login.do"
 
-LessonURL = JW_HOST + "student/teachinginfo/courseList.do?method=currentTermCourse"
+LessonURL = HOST + "student/teachinginfo/courseList.do?method=currentTermCourse"
 
-ScoreURL = JW_HOST + "student/studentinfo/achievementinfo.do?method=searchTermList&termCode="
+ScoreURL = HOST + "student/studentinfo/achievementinfo.do?method=searchTermList&termCode="
 
-CourseURL = JW_HOST + "student/elective/courseList.do?method=getCourseInfoM&courseNumber="
+CourseURL = HOST + "student/elective/courseList.do?method=getCourseInfoM&courseNumber="
 
 lesson_key=['Classid', 'CourseNumber', 'CourseName', 'District', 'Teacher', 'TimeandPlace']
 
