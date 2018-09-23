@@ -6,8 +6,8 @@
 
 ## 使用方式
 
-   * 直接调用 http://api.aneureka.cn （但毕竟服务器资源有限，可能不是很稳定）
-   * 部署在自己的服务器上（推荐方式）
+   * 试用：调用 http://www.aneureka.cn/api（可能有时候会挂😆）
+   * 部署在自己的服务器上 
 
 
 
@@ -31,7 +31,9 @@
 
 ## 部署
 
-1. Clone 这份代码
-2. 使用 <code>virtualenv</code>在项目目录下创建一个python虚拟环境（python3.6），
-3. 安装所需要的依赖包：pip install -r requirements
-4. 执行 run.py （推荐写一个运行脚本 start.sh 设置好环境变量）
+1. <code>git clone git@github.com:Aneureka/njuapi.git</code>
+2. <code>cd</code> 到项目目录下， <code>virtualenv venv</code>在项目目录下创建一个python虚拟环境（python3.6，如果没有该命令的话先安装）
+3. 安装所需要的依赖包：<code>pip install -r requirements</code>
+4. 将 <code>start.sh.default</code> 和 <code>instance/config.py.default</code> 的 <code>.default</code> 去掉，你也可以自己添加一些环境变量或配置
+5. 修改 <code>start.sh</code> 中的一些参数，执行！
+

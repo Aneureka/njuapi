@@ -1,5 +1,4 @@
+# debug
 DEBUG = False
-
-
 
 

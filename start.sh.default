@@ -1,0 +1,3 @@
+export APP_CONFIG_FILE=/yourWorkspace/njuapi/config/production.py
+
+python run.py runserver

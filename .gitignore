@@ -16,8 +16,8 @@ venv/
 # logs
 logs/
 
-# config
-instance/
+# instance [config]
+instance/*.py
 
 # scripts
 start.sh
