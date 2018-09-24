@@ -8,15 +8,15 @@ from requests.exceptions import ConnectionError
 from app.constants import code, message
 from app.utils import build_result, build_url
 
-HOST_URL = 'http://bbs.nju.edu.cn/'
-TAB_URL = HOST_URL + 'cache_bbsleft.htm'
-TOP10_URL = HOST_URL + 'bbstop10'
-BOARD_ALL_URL = HOST_URL + 'bbsall'
-BOARD_TOP20_URL = HOST_URL + 'bbstopb10'
-HOT_TOPICS_URL = HOST_URL + 'bbstopall'
-SEARCH_ARTICLE_URL = HOST_URL + 'bbsfind'
-BOARD_NOT_URL = HOST_URL + 'bbsnot'
-ARTICLE_URL = HOST_URL + 'bbsdoc'
+HOST_URL = 'http://bbs.nju.edu.cn'
+TAB_URL = HOST_URL + '/cache_bbsleft.htm'
+TOP10_URL = HOST_URL + '/bbstop10'
+BOARD_ALL_URL = HOST_URL + '/bbsall'
+BOARD_TOP20_URL = HOST_URL + '/bbstopb10'
+HOT_TOPICS_URL = HOST_URL + '/bbstopall'
+SEARCH_ARTICLE_URL = HOST_URL + '/bbsfind'
+BOARD_NOT_URL = HOST_URL + '/bbsnot'
+ARTICLE_URL = HOST_URL + '/bbsdoc'
 
 CODE = 'gb2312'
 
@@ -147,7 +147,7 @@ def _get_articles(url, pages=1):
             search_result = re.compile(r'<a href=([^>]+)>上一页</a>').findall(html)
             if search_result:
                 next_url = search_result[0]
-                time.sleep(1) # avoid connection abortion
+                time.sleep(1)  # avoid connection abortion
                 try:
                     article_list.extend(_get_articles(HOST_URL+next_url, pages-1))
                 except ConnectionError:
