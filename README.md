@@ -6,7 +6,7 @@
 
 ## 使用方式
 
-   * 试用：调用 http://www.aneureka.cn/api（可能有时候会挂😆）
+   * 试用：http://www.aneureka.cn/api
    * 部署在自己的服务器上 
 
 
@@ -21,17 +21,28 @@
 |     /bbs/boards      |       获取全部板块       | GET  |                              /                               |                              /                               |
 |  /bbs/boards/top20   |       获取热门板块       | GET  |                              /                               |                              /                               |
 |   /bbs/boards/not    |       获取进板画面       | GET  |                       board：板块代号                        |               /bbs/boards/not?board=D_Physics                |
-|    /bbs/articles     |   获取某篇文章具体内容   | GET  |         url：文章URL<br/>（URL需要先进行百分号编码）         | /bbs/articles?<br/>url=http://bbs.nju.edu.cn/bbstcon%3F<br/>board%3DV_Suggestions<br/>%26file%3DM.1537578669.A |
+|    /bbs/articles     |   获取某篇文章具体内容   | GET  |         url：文章URL<br/>（URL需要先进行百分号编码）         | /bbs/articles?<br/>url=http:\/\/bbs.nju.edu.cn\/bbstcon%3F<br/>board%3DV_Suggestions<br/>%26file%3DM.1537578669.A |
 |    /bbs/articles     |      获取板块内文章      | GET  |     board：板块代号<br/>pages：需要获取的文章页数，可选      |          /bbs/articles?<br/>board=D_Physics&pages=2          |
 |  /bbs/articles/hot   | 获取今日各区热门话题文章 | GET  |                              /                               |                              /                               |
 | /bbs/articles/top10  |     获取校园十大文章     | GET  |                              /                               |                              /                               |
 | /bbs/articles/search |         搜索文章         | GET  | user：作者名字关键词，可选<br/>keyword：标题关键词，可选<br/>days_from_now：多少天以内，可选 | /bbs/articles/search?<br/>user=Hiki&keyword=Handsome<br/>&days_from_now=7 |
 
+### 校务
+
+### 
+
+|          接口          |             说明              | 类型 |                             参数                             | 示例 |
+| :--------------------: | :---------------------------: | :--: | :----------------------------------------------------------: | :--: |
+|      /core/login       |             登录              | POST | username：学号<br/>password：密码<br/>（南京大学统一认证平台的密码） |  /   |
+| /core/book_borrow_info |    获取图书馆<br/>借书情况    | GET  |             token：👆登录后返回的token，<br/>下同             |  /   |
+|    /core/trans_list    | 获取校园卡近十次<br/>交易记录 | GET  |                   token：登录后返回的token                   |  /   |
+|     /core/tel_book     |         查询办公电话          | GET  |                 department_id：部门ID，可选                  |  /   |
+
 
 
 ## 部署
 
-1. <code>git clone git@github.com:Aneureka/njuapi.git</code>
+1. <code>git clone git@github\.com:Aneureka/njuapi.git</code>
 2. <code>cd</code> 到项目目录下， <code>virtualenv venv</code>在项目目录下创建一个python虚拟环境（python3.6，如果没有该命令的话先安装）
 3. 安装所需要的依赖包：<code>pip install -r requirements</code>
 4. 将 <code>start.sh.default</code> 和 <code>instance/config.py.default</code> 的 <code>.default</code> 去掉，你也可以自己添加一些环境变量或配置

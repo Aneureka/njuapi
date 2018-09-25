@@ -27,7 +27,7 @@ def get_sections():
         soup = BeautifulSoup(html, features='html.parser')
         raw_tabs = soup.find_all('a', attrs={'href': re.compile(r'bbsboa\?sec=\d+')})
         sections = [item.text.strip() for item in raw_tabs]
-        return build_result(content=sections) if sections \
+        return build_result(sections=sections) if sections \
             else build_result(code=code.PARSE_ERROR, err_msg=message.PARSE_HTML_ERROR)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -40,7 +40,7 @@ def get_top10():
         html = requests.get(TOP10_URL).text
         top10 = [dict(board=a, url=HOST_URL+quote(b), title=c.strip(), author=d, follower=e) for a, b, c, d, e in
                  pattern.findall(html)]
-        return build_result(content=top10) if top10 \
+        return build_result(top10=top10) if top10 \
             else build_result(code=code.EMPTY_CONTENT, err_msg=message.EMPTY_CONTENT)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -53,7 +53,7 @@ def get_board_top20():
         html = requests.get(BOARD_TOP20_URL).text
         board_top20 = [dict(seq=a, url=HOST_URL+quote(b), board=c, ch_board=d, moderator=e, cur_online=f, hot=g) for
                        a, b, c, d, e, f, g in pattern.findall(html)]
-        return build_result(content=board_top20) if board_top20 \
+        return build_result(board_top20=board_top20) if board_top20 \
             else build_result(code=code.PARSE_ERROR, err_msg=message.PARSE_HTML_ERROR)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -66,7 +66,7 @@ def get_board_all():
         html = requests.get(BOARD_ALL_URL).text
         bbs_all = [dict(seq=a, url=HOST_URL+quote(b), board=c, type=d, description=e, moderator=f) for a, b, c, d, e, f in
                    pattern.findall(html)]
-        return build_result(content=bbs_all) if bbs_all \
+        return build_result(bbs_all=bbs_all) if bbs_all \
             else build_result(code=code.PARSE_ERROR, err_msg=message.PARSE_HTML_ERROR)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -77,7 +77,7 @@ def get_hot_topics():
     try:
         html = requests.get(HOT_TOPICS_URL).text
         bbs_top_all = [dict(url=HOST_URL+quote(a), title=b.strip(), board=c) for a, b, c in pattern.findall(html)]
-        return build_result(content=bbs_top_all) if bbs_top_all \
+        return build_result(bbs_top_all=bbs_top_all) if bbs_top_all \
             else build_result(code=code.PARSE_ERROR, err_msg=message.PARSE_HTML_ERROR)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -101,7 +101,7 @@ def search_article(user='', keyword='', days_from_now=7):
     try:
         html = requests.post(SEARCH_ARTICLE_URL, data).text
         bbs_find = [dict(author=a, date=b, url=HOST_URL+quote(c), title=d.strip()) for a, b, c, d in pattern.findall(html)]
-        return build_result(content=bbs_find) if bbs_find \
+        return build_result(bbs_find=bbs_find) if bbs_find \
             else build_result(code=code.EMPTY_CONTENT, err_msg=message.EMPTY_CONTENT)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -112,7 +112,7 @@ def get_board_not(board):
         html = requests.get(build_url(BOARD_NOT_URL, board=board)).text
         soup = BeautifulSoup(html, features='html.parser')
         raw_not = soup.find('textarea')
-        return build_result(content=soup.find('textarea').text) if raw_not \
+        return build_result(board_not=soup.find('textarea').text) if raw_not \
             else build_result(code=code.INVALID_BOARD_NAME, err_msg=message.INVALID_BOARD_NAME)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -121,7 +121,7 @@ def get_board_not(board):
 def get_articles_by_board(board, page=1):
     try:
         articles = _get_articles(build_url(ARTICLE_URL, board=board), page)
-        return build_result(content=articles)
+        return build_result(articles=articles)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
 
@@ -131,7 +131,7 @@ def get_article(url):
         html = requests.get(url).text
         soup = BeautifulSoup(html, features='html.parser')
         res = soup.find_all('textarea')
-        return build_result(content=res[0].text) if res else build_result(code=code.INVALID_POSTFIX, err_msg=message.INVALID_POSTFIX)
+        return build_result(article=res[0].text) if res else build_result(code=code.INVALID_POSTFIX, err_msg=message.INVALID_POSTFIX)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
 
