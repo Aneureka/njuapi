@@ -127,11 +127,25 @@ def get_articles_by_board(board, page=1):
 
 
 def get_article(url):
+    pattern = re.compile(r'发信人: \S+\s+\(([^)]*)\), 信区:\s*([^\n]+)\s*标\s*题:\s+([^\n]+)\s*发信站:[^(]*\(([^)]+)\)\s*([\S\s]*?)\n+--\n')
     try:
         html = requests.get(url).text
         soup = BeautifulSoup(html, features='html.parser')
         res = soup.find_all('textarea')
-        return build_result(article=res[0].text) if res else build_result(code=code.INVALID_POSTFIX, err_msg=message.INVALID_POSTFIX)
+        discusses = []
+        for item in res:
+            text = item.text.replace('\r\n', '\n')
+            group = pattern.findall(text)[0]
+            print(group)
+            discusses.append({
+                'author': group[0],
+                'board': group[1],
+                'title': group[2],
+                'created_at': group[3],
+                'content': group[4]
+            })
+            print('---------------------')
+        return build_result(discusses=discusses) if res else build_result(code=code.INVALID_POSTFIX, err_msg=message.INVALID_POSTFIX)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
 
@@ -158,4 +172,4 @@ def _get_articles(url, pages=1):
 
 
 if __name__ == '__main__':
-    pass
+    print(get_article("http://bbs.nju.edu.cn/bbstcon?board=Girls&file=M.1538052273.A"))
