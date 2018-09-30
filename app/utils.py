@@ -9,7 +9,7 @@ def build_result(code=SUCCESS, err_msg=None, **kwargs):
         result['err_msg'] = err_msg
     for k, v in kwargs.items():
         result[k] = v
-    return json.dumps(result)
+    return json.dumps(result, ensure_ascii=False)
 
 
 def build_url(host_url, **args):

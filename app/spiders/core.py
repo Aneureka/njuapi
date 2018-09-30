@@ -16,6 +16,8 @@ BOOK_BORROW_INFO_URL = SERVICE_HOST + '/getBookBorrowInfo.mo'
 TRANS_LIST_URL = SERVICE_HOST + '/getTransList.mo'
 TEL_BOOK_URL = SERVICE_HOST + '/viewTelBook.mo'
 
+LOGIN_KEYWORD = '南京大学统一身份认证服务'
+
 POST_HEADERS = {'Content-Type': 'application/x-www-form-urlencoded'}
 
 
@@ -41,7 +43,6 @@ def core_login(username, password):
         login_info = json.loads(search_result[0])
         user_info = _retrieve_user_info(login_info)
         cookie = _retrieve_cookie(login_info)
-        print(cookie)
         token = _encode_cookie(cookie)
         return build_result(user_info=user_info, token=token.decode('utf-8'))
 
@@ -55,26 +56,32 @@ def get_book_borrow_info(token):
     try:
         cookie = _decode_token(token)
         raw_info = requests.get(BOOK_BORROW_INFO_URL, cookies=cookie).text
+        if raw_info.__contains__(LOGIN_KEYWORD):
+            return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
         raw_borrow_info = json.loads(raw_info)
         return build_result(book_borrow_info=_retrieve_book_borrow_info(raw_borrow_info))
-    except ConnectionError as e1:
-        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e1))
+    except ConnectionError as e:
+        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
     except binascii.Error:
         return build_result(code=code.INVALID_TOKEN, err_msg=message.INVALID_TOKEN)
     except JSONDecodeError:
         return build_result(code=code.INVALID_TOKEN, err_msg=message.INVALID_TOKEN)
-    except ValueError as e2:
-        return build_result(code=code.EMPTY_VALUE, err_msg=str(e2))
+    except AttributeError:
+        return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
 
 
 def get_trans_list(token):
     try:
         cookie = _decode_token(token)
         raw_info = requests.get(TRANS_LIST_URL, cookies=cookie).text
+        if raw_info.__contains__(LOGIN_KEYWORD):
+            return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
         raw_trans_list = json.loads(raw_info)
         return build_result(trans_list=_retrieve_trans_list(raw_trans_list))
-    except ConnectionError as e1:
-        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e1))
+    except ConnectionError as e:
+        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
+    except AttributeError:
+        return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
 
 
 def get_tel_book(department_id=None):
@@ -87,10 +94,12 @@ def get_tel_book(department_id=None):
         return build_result(tel_book=_retrieve_tel_book(raw_tel_book))
     except ConnectionError as e1:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e1))
+    except ValueError as e2:
+        return build_result(code=code.EMPTY_VALUE, err_msg=str(e2))
 
 
 def _retrieve_user_info(login_info):
-    if login_info:
+    try:
         return {
             'sid': login_info.get('user').get('data').get('uxid'),
             'name': login_info.get('user').get('data').get('username'),
@@ -99,40 +108,35 @@ def _retrieve_user_info(login_info):
             'gender': login_info.get('user').get('data').get('sex'),
             'department_id': login_info.get('user').get('data').get('departmentId'),
             'dormitory': login_info.get('user').get('data').get('dormitory'),
-            'groups': login_info.get('user').get('data').get('groups'),
-            'login_info': {
-                'cookie_domain': login_info.get('ssoCookie')[0].get('cookieDomain'),
-                'i_planet_directory_pro': login_info.get('ssoCookie')[0].get('cookieValue'),
-                'user_pwd': login_info.get('userPwd')
-            }
+            'groups': login_info.get('user').get('data').get('groups')
         }
-    else:
+    except AttributeError:
         raise ValueError('The login information is empty.')
 
 
 def _retrieve_cookie(login_info):
-    if login_info:
+    try:
         return {
             'iPlanetDirectoryPro': login_info.get('ssoCookie')[0].get('cookieValue')
         }
-    else:
+    except AttributeError:
         raise ValueError('The login information is empty.')
 
 
 def _retrieve_book_borrow_info(raw_borrow_info):
-    if raw_borrow_info:
+    try:
         return {
             'accumulation': int(raw_borrow_info.get('data').get('ljjs')),
             'max': int(raw_borrow_info.get('data').get('zdkj')),
             'violation': int(raw_borrow_info.get('data').get('wzcs')),
             'arrears': int(raw_borrow_info.get('data').get('qkje')),
         }
-    else:
-        raise ValueError('The book borrow information is empty.')
+    except AttributeError as e:
+        raise e
 
 
 def _retrieve_trans_list(raw_trans_list):
-    if raw_trans_list:
+    try:
         raw_items = raw_trans_list.get('data').get('items')
         items = []
         for item in raw_items:
@@ -144,12 +148,12 @@ def _retrieve_trans_list(raw_trans_list):
                 'address': item.get('termName')
             })
         return items
-    else:
-        raise ValueError('The trans information is empty.')
+    except AttributeError as e:
+        raise e
 
 
 def _retrieve_tel_book(raw_tel_book):
-    if raw_tel_book:
+    try:
         raw_items = raw_tel_book.get('data').get('items')
         items = []
         for item in raw_items:
@@ -158,7 +162,7 @@ def _retrieve_tel_book(raw_tel_book):
                 new_item['phones'] = [x.get('phone') for x in item.get('phones')]
             items.append(new_item)
         return items
-    else:
+    except AttributeError:
         raise ValueError('The tel book is empty.')
 
 
@@ -175,4 +179,5 @@ def _decode_token(token):
         raise e2
 
 
-
+if __name__ == '__main__':
+    pass
