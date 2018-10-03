@@ -38,9 +38,9 @@ def get_top10():
         r'<a href=bbsdoc\?board=\w+>(\w+)</a><td><a href="(\S+)">\s*([^<]+)\s*</a><td><a href=\S+>\s*(\w+)</a><td>(\d+)')
     try:
         html = requests.get(TOP10_URL).text
-        top10 = [dict(board=a, url=HOST_URL+quote(b), title=c.strip(), author=d, follower=e) for a, b, c, d, e in
+        top10 = [dict(board=a, url=quote(b), title=c.strip(), author=d, follower=e) for a, b, c, d, e in
                  pattern.findall(html)]
-        return build_result(top10=top10) if top10 \
+        return build_result(articles=top10) if top10 \
             else build_result(code=code.EMPTY_CONTENT, err_msg=message.EMPTY_CONTENT)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -53,7 +53,7 @@ def get_board_top20():
         html = requests.get(BOARD_TOP20_URL).text
         board_top20 = [dict(seq=a, url=HOST_URL+quote(b), board=c, ch_board=d, moderator=e, cur_online=f, hot=g) for
                        a, b, c, d, e, f, g in pattern.findall(html)]
-        return build_result(board_top20=board_top20) if board_top20 \
+        return build_result(boards=board_top20) if board_top20 \
             else build_result(code=code.PARSE_ERROR, err_msg=message.PARSE_HTML_ERROR)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -61,12 +61,12 @@ def get_board_top20():
 
 def get_board_all():
     pattern = re.compile(
-        r'<tr><td>(\d+)<td><a href=(\S+)>([\dA-Za-z_]+)</a><td>\[(\S+)\]<td><a href=\S+>\s+○\s*(\w+)\s*</a><td>(\S+)</a>')
+        r'<tr><td>(\d+)<td><a href=([^>]+)>([\dA-Za-z_]+)</a><td>\[(\S+)\]<td><a href=\S+>\s+○\s*(\w+)\s*</a><td>(\S+)</a>')
     try:
         html = requests.get(BOARD_ALL_URL).text
-        bbs_all = [dict(seq=a, url=HOST_URL+quote(b), board=c, type=d, description=e, moderator=f) for a, b, c, d, e, f in
+        bbs_all = [dict(seq=a, url=HOST_URL+'/'+b, board=c, type=d, description=e, moderator=f) for a, b, c, d, e, f in
                    pattern.findall(html)]
-        return build_result(bbs_all=bbs_all) if bbs_all \
+        return build_result(boards=bbs_all) if bbs_all \
             else build_result(code=code.PARSE_ERROR, err_msg=message.PARSE_HTML_ERROR)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
@@ -76,17 +76,17 @@ def get_hot_topics():
     pattern = re.compile(r'<td>\S+<a href="(\S+)">([^<]+)</a>\s*\[<a href=bbsdoc\?board=\w+>(\w+)</a>\]')
     try:
         html = requests.get(HOT_TOPICS_URL).text
-        bbs_top_all = [dict(url=HOST_URL+quote(a), title=b.strip(), board=c) for a, b, c in pattern.findall(html)]
-        return build_result(bbs_top_all=bbs_top_all) if bbs_top_all \
+        bbs_top_all = [dict(url=quote(a), title=b.strip(), board=c) for a, b, c in pattern.findall(html)]
+        return build_result(articles=bbs_top_all) if bbs_top_all \
             else build_result(code=code.PARSE_ERROR, err_msg=message.PARSE_HTML_ERROR)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
 
 
-def search_article(user='', keyword='', days_from_now=7):
+def search_article(author='', keyword='', days_from_now=7):
     data = {
         'flag': 1,
-        'user': user,
+        'user': author,
         'title': keyword,
         'title2': '',
         'title3': '',
@@ -94,15 +94,14 @@ def search_article(user='', keyword='', days_from_now=7):
         'day2': days_from_now
     }
 
-    print(data)
-
     pattern = re.compile(
         r'<a href=bbsqry\?userid=\w+>(\w+)</a><td width=\d+>([^<]+)<td><a href=([^>]+)>([^<]+)</a>')
     try:
         html = requests.post(SEARCH_ARTICLE_URL, data).text
-        bbs_find = [dict(author=a, date=b, url=HOST_URL+quote(c), title=d.strip()) for a, b, c, d in pattern.findall(html)]
-        return build_result(bbs_find=bbs_find) if bbs_find \
-            else build_result(code=code.EMPTY_CONTENT, err_msg=message.EMPTY_CONTENT)
+        if '错误' in html:
+            return build_result(code=code.TOO_FREQUENT_ERROR, err_msg=message.TOO_FREQUENT_ERROR)
+        articles = [dict(author=a, date=b, url=quote(c), title=d.strip()) for a, b, c, d in pattern.findall(html)]
+        return build_result(articles=articles)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
 
@@ -129,23 +128,23 @@ def get_articles_by_board(board, page=1):
 def get_article(url):
     pattern = re.compile(r'发信人: \S+\s+\(([^)]*)\), 信区:\s*([^\n]+)\s*标\s*题:\s+([^\n]+)\s*发信站:[^(]*\(([^)]+)\)\s*([\S\s]*?)\n+\s*(-\n|--\n|【 )')
     try:
-        html = requests.get(url).text
+        html = requests.get(HOST_URL+'/'+url).text
         soup = BeautifulSoup(html, features='html.parser')
         res = soup.find_all('textarea')
-        discusses = []
+        discussion = []
         for item in res:
             text = item.text.replace('\r\n', '\n')
             find_res = pattern.findall(text)
             if find_res:
                 group = find_res[0]
-                discusses.append({
+                discussion.append({
                     'author': group[0],
                     'board': group[1],
                     'title': group[2],
                     'created_at': group[3],
                     'content': group[4].replace('\n', '')
                 })
-        return build_result(discusses=discusses) if res else build_result(code=code.INVALID_POSTFIX, err_msg=message.INVALID_POSTFIX)
+        return build_result(discussion=discussion) if res else build_result(code=code.INVALID_POSTFIX, err_msg=message.INVALID_POSTFIX)
     except ConnectionError as e:
         return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
 
@@ -155,7 +154,7 @@ def _get_articles(url, pages=1):
         r'<td><a href=bbsqry\?userid=[^>]+>([^<]+)</a><td><td><nobr>([^<]+)<td><a href=([^>]+)>([^<]+)</a>\(<[^>]+>([\w\.]+)</font>\)<td><font color=\w*>(\d+)</font>')
     try:
         html = requests.get(url).text
-        article_list = [dict(author=a, time=b, url=HOST_URL+quote(c), title=d.strip(), reply=e, hot=f) for a, b, c, d, e, f in
+        article_list = [dict(author=a, time=b, url=quote(c), title=d.strip(), reply=e, hot=f) for a, b, c, d, e, f in
                         pattern.findall(html)]
         if pages > 1:
             search_result = re.compile(r'<a href=([^>]+)>上一页</a>').findall(html)

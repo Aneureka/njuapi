@@ -60,12 +60,10 @@ def get_book_borrow_info(token):
             return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
         raw_borrow_info = json.loads(raw_info)
         return build_result(book_borrow_info=_retrieve_book_borrow_info(raw_borrow_info))
-    except ConnectionError as e:
-        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
-    except binascii.Error:
-        return build_result(code=code.INVALID_TOKEN, err_msg=message.INVALID_TOKEN)
-    except JSONDecodeError:
-        return build_result(code=code.INVALID_TOKEN, err_msg=message.INVALID_TOKEN)
+    except ConnectionError as e1:
+        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e1))
+    except ValueError as e2:
+        return build_result(code=code.INVALID_TOKEN, err_msg=str(e2))
     except AttributeError:
         return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
 
@@ -78,8 +76,10 @@ def get_trans_list(token):
             return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
         raw_trans_list = json.loads(raw_info)
         return build_result(trans_list=_retrieve_trans_list(raw_trans_list))
-    except ConnectionError as e:
-        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e))
+    except ConnectionError as e1:
+        return build_result(code=code.CONNECTION_ERROR, err_msg=str(e1))
+    except ValueError as e2:
+        return build_result(code=code.INVALID_TOKEN, err_msg=str(e2))
     except AttributeError:
         return build_result(code=code.TOKEN_EXPIRED, err_msg=message.TOKEN_EXPIRED)
 
@@ -157,7 +157,7 @@ def _retrieve_tel_book(raw_tel_book):
         raw_items = raw_tel_book.get('data').get('items')
         items = []
         for item in raw_items:
-            new_item = {'department_id': item.get('id'), 'department_name': item.get('name')}
+            new_item = {'id': item.get('id'), 'name': item.get('name')}
             if item.get('isChildNode') == 0:
                 new_item['phones'] = [x.get('phone') for x in item.get('phones')]
             items.append(new_item)
@@ -173,10 +173,12 @@ def _encode_cookie(cookie):
 def _decode_token(token):
     try:
         return json.loads(base64.b64decode(token).decode('utf-8'))
-    except binascii.Error as e1:
-        raise e1
-    except JSONDecodeError as e2:
-        raise e2
+    except TypeError:
+        raise ValueError('Token is not provided.')
+    except binascii.Error:
+        raise ValueError('Token is invalid.')
+    except JSONDecodeError:
+        raise ValueError('Token is invalid.')
 
 
 if __name__ == '__main__':

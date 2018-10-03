@@ -9,9 +9,9 @@ core = Blueprint('core', __name__)
 
 @core.route('/login', methods=['POST'])
 def login():
-    args = request.args
-    username = args.get('username')
-    password = args.get('password')
+    data = request.form
+    username = data.get('username')
+    password = data.get('password')
     return core_login(username, password)
 
 
@@ -22,13 +22,13 @@ def book_borrow_info():
 
 
 @core.route('/trans_list', methods=['GET'])
-def book_borrow_info():
+def trans_list():
     token = request.args.get('token')
     return get_trans_list(token)
 
 
 @core.route('/tel_book', methods=['GET'])
-def book_borrow_info():
+def tel_book():
     department_id = request.args.get('department_id')
     return get_tel_book(department_id)
 

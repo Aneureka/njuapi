@@ -33,7 +33,10 @@ def boards_not():
 def articles():
     if 'board' in request.args:
         if 'pages' in request.args:
-            return get_articles_by_board(request.args['board'], request.args['pages'])
+            if str.isdigit(request.args['pages']):
+                return get_articles_by_board(request.args['board'], int(request.args['pages']))
+            else:
+                return build_result(code=code.INVALID_NUMBER, err_msg='The param pages is not a number')
         else:
             return get_articles_by_board(request.args['board'])
     elif 'url' in request.args:
@@ -55,8 +58,8 @@ def articles_top():
 @bbs.route('/articles/search', methods=['GET'])
 def articles_search():
     args = request.args
-    user = args['user'] if 'user' in args else ''
+    author = args['author'] if 'author' in args else ''
     keyword = args['keyword'] if 'keyword' in args else ''
-    days_from_now = args['days_from_now'] if 'days_from_now' in args else 7
-    return search_article(user, keyword, days_from_now)
+    days_from_now = args['days'] if 'days' in args else 7
+    return search_article(author, keyword, days_from_now)
 
