@@ -1,5 +1,2 @@
 DEBUG = True
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 0
-REDIS_PASSWORD = 'secret'
