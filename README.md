@@ -138,7 +138,7 @@
       "board": "Pictures",
       "url": "bbstcon%3Fboard%3DPictures%26file%3DM.1538536620.A",
       "title": "【随拍】国庆节只有此景不堵",
-      "a  thor": "mifengwang",
+      "author": "mifengwang",
       "follower": "6"
     }
   ]
