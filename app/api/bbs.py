@@ -17,8 +17,8 @@ def boards():
     return get_board_all()
 
 
-@bbs.route('/boards/top', methods=['GET'])
-def boards_top():
+@bbs.route('/boards/hot', methods=['GET'])
+def boards_hot():
     return get_board_top20()
 
 

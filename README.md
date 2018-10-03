@@ -41,7 +41,7 @@
 
 全部板块 <code>GET</code> http://aneureka.cn:82/bbs/boards
 
-热门板块 <code>GET</code> http://aneureka.cn:82/bbs/boards/top20
+热门板块 <code>GET</code> http://aneureka.cn:82/bbs/boards/hot
 
 ```json
 {
