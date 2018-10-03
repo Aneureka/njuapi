@@ -8,7 +8,7 @@
 
 ## 使用方式
 
-   * 接口地址（丐中丐服务器）：http://www.aneureka.cn/api
+   * 接口地址（丐中丐服务器）：http://aneureka.cn:82
    * 部署在自己的服务器上，部署方式和步骤见下面的说明。
 
 
@@ -17,7 +17,7 @@
 
 ### 小百合BBS
 
-所有的标签 <code>GET</code> http://www.aneureka.cn/api/bbs/sections
+所有的标签 <code>GET</code> http://aneureka.cn:82/bbs/sections
 
 ```json
 {
@@ -39,9 +39,9 @@
 }
 ```
 
-全部板块 <code>GET</code> http://www.aneureka.cn/api/bbs/boards
+全部板块 <code>GET</code> http://aneureka.cn:82/bbs/boards
 
-热门板块 <code>GET</code> http://www.aneureka.cn/api/bbs/boards/top20
+热门板块 <code>GET</code> http://aneureka.cn:82/bbs/boards/top20
 
 ```json
 {
@@ -74,7 +74,7 @@
 }
 ```
 
-进版画面 <code>GET</code> http://www.aneureka.cn/api/bbs/boards/not?board=1937_12_13
+进版画面 <code>GET</code> http://aneureka.cn:82/bbs/boards/not?board=1937_12_13
 
 （这里显示效果很丑嘤嘤嘤）
 
@@ -85,7 +85,7 @@
 }
 ```
 
-某个板块的帖子 <code>GET</code> http://www.aneureka.cn/api/bbs/articles?board=1937_12_13&pages=2
+某个板块的帖子 <code>GET</code> http://aneureka.cn:82/bbs/articles?board=1937_12_13&pages=2
 
 <code>pages</code> 可选参数，表示需要获取几页的帖子（时间从近到远）
 
@@ -121,7 +121,7 @@
 }
 ```
 
-校园十大 <code>GET</code> http://www.aneureka.cn/api/bbs/articles/top10
+校园十大 <code>GET</code> http://aneureka.cn:82/bbs/articles/top10
 
 ```json
 {
@@ -145,7 +145,7 @@
 }
 ```
 
-今日各区热门话题文章 <code>GET</code> http://www.aneureka.cn/api/bbs/articles/hot
+今日各区热门话题文章 <code>GET</code> http://aneureka.cn:82/bbs/articles/hot
 
 ```json
 {
@@ -170,7 +170,7 @@
 }
 ```
 
-查看文章具体内容 <code>GET</code> http://www.aneureka.cn/api/bbs/articles?url=bbstcon%3Fboard%3DNJUExpress%26file%3DM.1538558289.A
+查看文章具体内容 <code>GET</code> http://aneureka.cn:82/bbs/articles?url=bbstcon%3Fboard%3DNJUExpress%26file%3DM.1538558289.A
 
 ```json
 {
@@ -194,7 +194,7 @@
 }
 ```
 
-搜索文章 <code>GET</code>  http://www.aneureka.cn/api/bbs/articles/search?author=deliver&keyword=ID&days=6
+搜索文章 <code>GET</code>  http://aneureka.cn:82/bbs/articles/search?author=deliver&keyword=ID&days=6
 
 <code>author</code> 可选参数，文章作者ID
 
@@ -239,7 +239,7 @@
 
 ### 校务
 
-登录 <code>POST</code> http://www.aneureka.cn/api/core/login
+登录 <code>POST</code> http://aneureka.cn:82/core/login
 
 <code>Content-Type</code> application/x-www-form-urlencoded
 
@@ -264,7 +264,7 @@
 }
 ```
 
-图书馆借书情况 <code>GET</code> http://www.aneureka.cn/api/core/book_borrow_info?token=eyJpUGxhbxxx
+图书馆借书情况 <code>GET</code> http://aneureka.cn:82/core/book_borrow_info?token=eyJpUGxhbxxx
 
 ```json
 {
@@ -278,7 +278,7 @@
 }
 ```
 
-校园卡交易记录 <code>GET</code> http://www.aneureka.cn/api/core/trans_list?token=eyJpUGxhbxxx
+校园卡交易记录 <code>GET</code> http://aneureka.cn:82/core/trans_list?token=eyJpUGxhbxxx
 
 ```json
 {
@@ -309,9 +309,9 @@
 }
 ```
 
-校园各部门办公电话 <code>GET</code> http://www.aneureka.cn/api/core/tel_book?department_id=102
+校园各部门办公电话 <code>GET</code> http://aneureka.cn:82/core/tel_book?department_id=102
 
-<code>department_id</code> 部门ID，可选参数，可以由 <code>http://www.aneureka.cn/api/core/tel_book</code> 获得最根部的部门
+<code>department_id</code> 部门ID，可选参数，可以由 <code>http://aneureka.cn:82/core/tel_book</code> 获得最根部的部门
 
 ```json
 {

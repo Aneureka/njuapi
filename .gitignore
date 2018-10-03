@@ -21,3 +21,7 @@ instance/*.py
 
 # scripts
 start.sh
+
+# sensitive config
+*.ini
+
